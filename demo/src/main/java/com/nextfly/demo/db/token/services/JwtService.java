@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.stereotype.Service;
 
 import com.nextfly.demo.db.chiavi.service.ChiaviService;
@@ -23,13 +22,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class JwtService {
-    private ChiaviService chiaviService;
-    private UtenteRepo utenteRepo;
+    final private ChiaviService chiaviService;
+    final private UtenteRepo utenteRepo;
 
     @Autowired
-    public JwtService(TokenService tokenService, UtenteRepo utenteRepo) {
-        this.chiaviService = chiaviService;
+    public JwtService(UtenteRepo utenteRepo, ChiaviService chiaviService) {
         this.utenteRepo = utenteRepo;
+        this.chiaviService = chiaviService;
     }
 
     public String buildToken(UtenteEntity user)

@@ -3,23 +3,23 @@ package com.nextfly.demo.filters;
 import java.io.IOException;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class PublicFilter implements Filter {
+public class PublicFilter extends OncePerRequestFilter {
+
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        System.out.println("Public Request URI: " + httpRequest.getRequestURI());
-
-        chain.doFilter(request, response);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        if (request.getRequestURI().startsWith("/api/auth")) {
+            System.out.println("Richiesta pubblica ad : " + request.getRequestURI());
+        }
+        filterChain.doFilter(request, response);
     }
 }

@@ -26,7 +26,7 @@ public class UtenteEntity {
     @Column(length = 80, unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String password;
 
     @Column(name = "data_cre", nullable = false)
