@@ -7,9 +7,4 @@ import lombok.Data;
 @Service
 public interface LoginInt {
 
-    @Data
-    public class ResponseLogin {
-        private String token;
-        private String messaggio;
-    }
 }

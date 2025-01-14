@@ -96,7 +96,11 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version> <!-- Or the latest version -->
 		</dependency>
-		
+		<!-- Mail sender-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 
 	</dependencies>
 
@@ -128,5 +132,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

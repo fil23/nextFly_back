@@ -6,8 +6,8 @@ import java.security.spec.InvalidKeySpecException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nextfly.demo.controllers.auth.interfaces.LoginInt;
-import com.nextfly.demo.controllers.auth.interfaces.LoginInt.ResponseLogin;
+import com.nextfly.demo.controllers.auth.interfaces.SignInInt;
+import com.nextfly.demo.controllers.auth.interfaces.SignInInt.ResponseSignIn;
 import com.nextfly.demo.db.token.services.JwtService;
 import com.nextfly.demo.db.utente.entities.UtenteEntity;
 import com.nextfly.demo.db.utente.repositories.UtenteRepo;
@@ -23,9 +23,9 @@ public class UtenteService {
         this.jwt = jwt;
     }
 
-    public LoginInt.ResponseLogin salvaUtente(UtenteEntity utente)
+    public SignInInt.ResponseSignIn salvaUtente(UtenteEntity utente)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
-        ResponseLogin response = new ResponseLogin();
+        ResponseSignIn response = new ResponseSignIn();
         utenteRepo.save(utente);
 
         response.setToken(jwt.buildToken(utente));
