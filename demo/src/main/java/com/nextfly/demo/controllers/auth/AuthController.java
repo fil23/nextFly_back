@@ -80,7 +80,7 @@ public class AuthController {
 
     @PostMapping("/verifica_email_reg")
     public ResponseEntity<SignInInt.ResponseValidazione> verifyEmail(@RequestBody SignInInt.RequestReg request) {
-        logger.info("------------ STO ESEGUENDO:  " + getMethodName() + "---------------------");
+        logger.info("------------ STO ESEGUENDO:  /verifica_email_reg ---------------------");
         ResponseValidazione response = authService.signIn(request);
         return new ResponseEntity<SignInInt.ResponseValidazione>(response,
                 response.getMsg() != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
