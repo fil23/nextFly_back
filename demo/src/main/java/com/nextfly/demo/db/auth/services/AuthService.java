@@ -1,5 +1,7 @@
 package com.nextfly.demo.db.auth.services;
 
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class AuthService {
         ResponseValidazione resp = new ResponseValidazione();
         String cod = emailService.generaCod();
         logger.info("Codice: " + cod);
-        redis.saveCodice(requestReg.getEmail(), cod);
+        redis.save(requestReg.getEmail(), cod, 10, TimeUnit.MINUTES);
         try {
             emailService.sendMail(requestReg.getEmail(), cod);
             resp.setMsg("Email sent");

@@ -1,9 +1,9 @@
 package com.nextfly.demo.configuration.email;
 
+import java.util.Properties;
 import java.util.Random;
 
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class EmailService {
 
     public String generaCod() {
         String cod = "";
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             cod += CARATTERI.charAt(random.nextInt(CARATTERI.length()));
         }
 
@@ -58,8 +58,8 @@ public class EmailService {
                                     padding: 20px;
                                 }
                                 .email-header {
-                                    background: #4CAF50;
-                                    color: white;
+                                    background: #FFB400;
+                                    color: black;
                                     text-align: center;
                                     font-size: 24px;
                                     padding: 10px;
@@ -73,7 +73,7 @@ public class EmailService {
                                 }
                                 .verification-code {
                                     display: inline-block;
-                                    background: #4CAF50;
+                                    background: #FFB400;
                                     color: white;
                                     padding: 10px 15px;
                                     font-size: 18px;
