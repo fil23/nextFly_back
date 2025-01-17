@@ -34,7 +34,7 @@ public class RedisService {
         redisTemplate.opsForHash().delete(CODICE, email);
     }
 
-    public Object find(String key) {
+    public Object getEntity(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 

@@ -17,6 +17,8 @@ import com.nextfly.demo.db.auth.services.AuthService;
 import com.nextfly.demo.db.utente.entities.UtenteEntity;
 import com.nextfly.demo.db.utente.service.UtenteService;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Date;
 import java.util.Collections;
 import java.util.Map;
@@ -25,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -81,9 +84,23 @@ public class AuthController {
     @PostMapping("/verifica_email_reg")
     public ResponseEntity<SignInInt.ResponseValidazione> verifyEmail(@RequestBody SignInInt.RequestReg request) {
         logger.info("------------ STO ESEGUENDO:  /verifica_email_reg ---------------------");
-        ResponseValidazione response = authService.signIn(request);
+        ResponseValidazione response = authService.velidateEmail(request);
         return new ResponseEntity<SignInInt.ResponseValidazione>(response,
                 response.getMsg() != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/verifica_cod", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SignInInt.ResponseSignIn> verifyCod(@RequestBody SignInInt.RequestVerificaCod request) {
+        logger.info("------------ STO ESEGUENDO: /verifica_cod---------------------");
+        ResponseSignIn response = new ResponseSignIn();
+        try {
+            response = authService.validateCode(request);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            logger.error("------------ Errore durante la generazione del token ---------------------");
+            e.printStackTrace();
+        }
+        return new ResponseEntity<ResponseSignIn>(response,
+                response.getToken() != null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST);
     }
 
 }

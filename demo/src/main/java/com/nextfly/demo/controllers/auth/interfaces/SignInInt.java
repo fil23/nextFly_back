@@ -9,13 +9,19 @@ public interface SignInInt {
     @Data
     public class RequestReg {
         private String email;
-        private String password;
 
     }
 
     @Data
     public class ResponseValidazione {
         private String msg;
+    }
+
+    @Data
+    public class RequestVerificaCod {
+        private String email;
+        private String password;
+        private String code;
     }
 
     @Data
