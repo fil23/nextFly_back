@@ -22,7 +22,7 @@ public class EmailService {
 
     public String generaCod() {
         String cod = "";
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             cod += CARATTERI.charAt(random.nextInt(CARATTERI.length()));
         }
 

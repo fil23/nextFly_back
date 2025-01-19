@@ -7,10 +7,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.nextfly.demo.configuration.email.EmailService;
-import com.nextfly.demo.configuration.redis.RedisService;
 import com.nextfly.demo.controllers.auth.interfaces.LoginInt;
 import com.nextfly.demo.controllers.auth.interfaces.SignInInt;
+import com.nextfly.demo.controllers.auth.interfaces.LoginInt.LoginResponse;
 import com.nextfly.demo.controllers.auth.interfaces.SignInInt.ResponseSignIn;
 import com.nextfly.demo.controllers.auth.interfaces.SignInInt.ResponseValidazione;
 import com.nextfly.demo.db.auth.services.AuthService;
@@ -27,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +50,13 @@ public class AuthController {
         return "ok";
     }
 
+    /***
+     * Registrazione con google
+     * 
+     * @param payload
+     * @return string token
+     * @return messaggio
+     */
     @PostMapping(value = "/google")
     public ResponseEntity<SignInInt.ResponseSignIn> authenticationWithGoogle(@RequestBody Map<String, String> payload) {
         String idToken = payload.get("token");
@@ -81,7 +86,13 @@ public class AuthController {
         return new ResponseEntity<SignInInt.ResponseSignIn>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("/verifica_email_reg")
+    /**
+     * Registrazione con email e password (invio email per codice)
+     * 
+     * @param email
+     * @return codice
+     */
+    @PostMapping(value = "/verifica_email_reg")
     public ResponseEntity<SignInInt.ResponseValidazione> verifyEmail(@RequestBody SignInInt.RequestReg request) {
         logger.info("------------ STO ESEGUENDO:  /verifica_email_reg ---------------------");
         ResponseValidazione response = authService.velidateEmail(request);
@@ -89,18 +100,43 @@ public class AuthController {
                 response.getMsg() != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "/verifica_cod", consumes = MediaType.APPLICATION_JSON_VALUE)
+    /***
+     * Verifica del codice ricevuto e salvataggio utente in db
+     * 
+     * @param email
+     * @param password
+     * @param codice
+     * @return token
+     */
+    @PostMapping("/verifica_cod")
     public ResponseEntity<SignInInt.ResponseSignIn> verifyCod(@RequestBody SignInInt.RequestVerificaCod request) {
         logger.info("------------ STO ESEGUENDO: /verifica_cod---------------------");
         ResponseSignIn response = new ResponseSignIn();
         try {
             response = authService.validateCode(request);
+            logger.info("------------ TOKEN GENERATO CON SUECCESSO ---------------------");
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             logger.error("------------ Errore durante la generazione del token ---------------------");
             e.printStackTrace();
         }
         return new ResponseEntity<ResponseSignIn>(response,
                 response.getToken() != null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginInt.LoginResponse> postMethodName(@RequestBody LoginInt.LoginRequest request) {
+        logger.info("------------ STO ESEGUENDO: /login---------------------");
+        LoginResponse response = new LoginResponse();
+        try {
+            response = utenteService.getUtente(request);
+            logger.info("------------ TOKEN GENERATO CON SUECCESSO ---------------------");
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            logger.error("------------ Errore durante la generazione del token ---------------------");
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<LoginResponse>(response,
+                response.getToken() != null ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST);
     }
 
 }

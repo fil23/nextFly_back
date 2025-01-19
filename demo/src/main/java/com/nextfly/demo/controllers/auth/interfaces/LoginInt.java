@@ -7,4 +7,15 @@ import lombok.Data;
 @Service
 public interface LoginInt {
 
+    @Data
+    public class LoginRequest {
+        private String email;
+        private String password;
+    }
+
+    @Data
+    public class LoginResponse {
+        private String token;
+
+    }
 }
