@@ -58,7 +58,7 @@ public class UtenteService {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeySpecException
      */
-    public LoginInt.LoginResponse getUtente(LoginInt.LoginRequest request)
+    public LoginInt.LoginResponse getUtenteLogin(LoginInt.LoginRequest request)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         LoginResponse response = new LoginResponse();
         Optional<UtenteEntity> utenteEntity = utenteRepo.findUtenteEntityByEmail(request.getEmail());
@@ -71,6 +71,11 @@ public class UtenteService {
         }
 
         return response;
+
+    }
+
+    public boolean utenteExist(String email) {
+        return utenteRepo.existsByEmail(email);
 
     }
 }

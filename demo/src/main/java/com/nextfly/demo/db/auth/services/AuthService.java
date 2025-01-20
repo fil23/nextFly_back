@@ -21,6 +21,7 @@ import com.nextfly.demo.controllers.auth.interfaces.SignInInt.ResponseValidazion
 import com.nextfly.demo.db.token.services.JwtService;
 import com.nextfly.demo.db.utente.entities.UtenteEntity;
 import com.nextfly.demo.db.utente.service.UtenteService;
+import com.nextfly.exception.UtenteExist;
 
 import jakarta.mail.MessagingException;
 
@@ -43,18 +44,24 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseValidazione velidateEmail(RequestReg requestReg) {
+    public ResponseValidazione velidateEmail(RequestReg requestReg) throws UtenteExist {
         ResponseValidazione resp = new ResponseValidazione();
-        String cod = emailService.generaCod();
-        logger.info("Codice: " + cod);
-        redis.save(requestReg.getEmail(), cod, 10, TimeUnit.MINUTES);
-        try {
-            emailService.sendMail(requestReg.getEmail(), cod);
-            resp.setMsg("Email sent");
-        } catch (MessagingException e) {
-            logger.error("Errore durante l'invio della mail: ", e);
-            e.printStackTrace();
+        if (!utenteService.utenteExist(requestReg.getEmail())) {
+            String cod = emailService.generaCod();
+            logger.info("Codice: " + cod);
+            redis.save(requestReg.getEmail(), cod, 10, TimeUnit.MINUTES);
+            try {
+                emailService.sendMail(requestReg.getEmail(), cod);
+                resp.setMsg("Email sent");
+            } catch (MessagingException e) {
+                logger.error("Errore durante l'invio della mail: ", e);
+                e.printStackTrace();
+            }
+        } else {
+            resp.setMsg("Utente già registrato");
+            throw new UtenteExist("Utente già presente nel DB");
         }
+
         return resp;
     }
 

@@ -128,7 +128,7 @@ public class AuthController {
         logger.info("------------ STO ESEGUENDO: /login---------------------");
         LoginResponse response = new LoginResponse();
         try {
-            response = utenteService.getUtente(request);
+            response = utenteService.getUtenteLogin(request);
             logger.info("------------ TOKEN GENERATO CON SUECCESSO ---------------------");
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             logger.error("------------ Errore durante la generazione del token ---------------------");

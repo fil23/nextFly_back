@@ -11,4 +11,6 @@ import com.nextfly.demo.db.utente.entities.UtenteEntity;
 public interface UtenteRepo extends JpaRepository<UtenteEntity, Long> {
     public Optional<UtenteEntity> findUtenteEntityByEmail(String email);
 
+    public boolean existsByEmail(String email);
+
 }
